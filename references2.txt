@@ -1,0 +1,95 @@
+@misc{MARUM2024,
+  author = {MARUM},
+  title = {PANGAEA – Data Publisher for Earth \& Environmental Science},
+  year = {2024},
+  url = {https://www.marum.de/en/PANGAEA-Data-Publisher-for-Earth-and-Environmental-Science-2.html#:~:text=The%20services%20provided%20by%20the,Research%20Data%20from%20Public%20Funding},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{SAEON2024,
+  author = {{South African Environmental Observation Network}},
+  title = {Open Data for Open Science},
+  year = {2024},
+  url = {https://ulwazi.saeon.ac.za/projects/open-data-platform/#:~:text=The%20ODP%20is%20tasked%20with,of%20data%20and%20scientific%20evidence},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{GBIF2024a,
+  author = {{Global Biodiversity Information Facility a}},
+  title = {More than 10,000 scientific papers enabled by GBIF-mediated data},
+  year = {2024},
+  url = {https://www.gbif.org/news/7wQdwQiUN5qF33Fu0CWgHV/more-than-10000-scientific-papers-enabled-by-gbif-mediated-data#:~:text=Today%2C%20GBIF%20crosses%20a%20significant,reviewed%20uses%20per%20day},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{GBIF2022,
+  author = {{Global Biodiversity Information Facility}},
+  title = {Introduction to GBIF},
+  year = {2022},
+  url = {https://docs.gbif.org/course-introduction-to-gbif/en/handling-data-quality.html#:~:text=expert%20knowledge,this%20may%20be%20required%20are},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{Gandon2024,
+  author = {{Gandon G}},
+  title = {Research Gap: The Geographical Bias of Environmental Data},
+  year = {2024},
+  url = {https://earth.org/research-gap-the-geographical-bias-of-environmental-data/#:~:text=Research%20Gap%3A%20The%20Geographical%20Bias,impact%20on%20modern%20environmental%20policies},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{GBIF2025,
+  author = {{Global Biodiversity Information Facility}},
+  title = {Global Biodiversity Information Facility},
+  year = {2025},
+  url = {https://www.gbif.org},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{NEON2025a,
+  author = {{National Ecological Observatory Network a}},
+  title = {About Us},
+  year = {2025},
+  url = {https://www.neonscience.org/about},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{NEON2025b,
+  author = {{National Ecological Observatory Network b}},
+  title = {Data and Samples},
+  year = {2025},
+  url = {https://www.neonscience.org/data-samples},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{NEON2025c,
+  author = {{National Ecological Observatory Network c}},
+  title = {National Ecological Observatory Network},
+  year = {2025},
+  url = {https://www.neonscience.org},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{DataONE2025,
+  author = {DataONE},
+  title = {Data Observation Network for Earth},
+  year = {2025},
+  url = {https://www.dataone.org},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{Pau2021,
+  author = {{Stephanie Pau, Jesse B. Nippert, Ryan Slapikas, Daniel Griffith, Seton Bachle, Brent R. Helliker, Rory C. O’Connor, William J. Riley, Christopher J. Still, Marissa Zaricor}},
+  title = {Poor relationships between NEON Airborne Observation Platform data and field-based vegetation traits at a mesic grassland},
+  year = {2021},
+  url = {https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecy.3590},
+  note = {Accessed 10 June 2025}
+}
+
+@misc{Li2022,
+  author = {{Daijiang Li, Sydne Record, Eric R. Sokol, Matthew E. Bitters, Melissa Y. Chen, Y. Anny Chung, Matthew R. Helmus, Ruvi Jaimes, Lara Jansen, Marta A. Jarzyna, Michael G. Just, Jalene M. LaMontagne, Brett A. Melbourne, Wynne Moss, Kari E. A. Norman, Stephanie M. Parker, Natalie Robinson, Bijan Seyednasrollah, Colin Smith, Sarah Spaulding, Thilina D. Surasinghe, Sarah K. Thomsen, Phoebe L. Zarnetske}},
+  title = {Standardized NEON organismal data for biodiversity research},
+  year = {2022},
+  url = {https://esajournals.onlinelibrary.wiley.com/doi/10.1002/ecs2.4141},
+  note = {Accessed 10 June 2025}
+}

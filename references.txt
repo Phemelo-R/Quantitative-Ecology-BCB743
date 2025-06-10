@@ -1,0 +1,55 @@
+@misc{GBIF2024,
+  author = {{Global Biodiversity Information Facility}},
+  title = {Global Biodiversity Information Facility},
+  year = {2024},
+  url = {https://www.gbif.org},
+  note = {Accessed 10 June 2024}
+}
+
+@misc{NEON2024,
+  author = {{National Ecological Observatory Network}},
+  title = {National Ecological Observatory Network},
+  year = {2024},
+  url = {https://www.neonscience.org},
+  note = {Accessed 10 June 2024}
+}
+
+@misc{MARUM2024,
+  author = {MARUM},
+  title = {PANGAEA – Data Publisher for Earth \& Environmental Science},
+  year = {2024},
+  url = {https://www.pangaea.de},
+  note = {Accessed 10 June 2024}
+}
+
+@misc{LTER2024,
+  author = {{Long Term Ecological Research Network}},
+  title = {Long Term Ecological Research Network},
+  year = {2024},
+  url = {https://lternet.edu},
+  note = {Accessed 10 June 2024}
+}
+
+@misc{SAEON2024,
+  author = {{South African Environmental Observation Network}},
+  title = {South African Environmental Observation Network},
+  year = {2024},
+  url = {https://ulwazi.saeon.ac.za},
+  note = {Accessed 10 June 2024}
+}
+
+@misc{DataONE2024,
+  author = {DataONE},
+  title = {Data Observation Network for Earth},
+  year = {2024},
+  url = {https://www.dataone.org},
+  note = {Accessed 10 June 2024}
+}
+
+@misc{ALA2024,
+  author = {{Atlas of Living Australia}},
+  title = {Atlas of Living Australia},
+  year = {2024},
+  url = {https://www.ala.org.au},
+  note = {Accessed 10 June 2024}
+}
