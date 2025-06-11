@@ -1,0 +1,101 @@
+---
+title: "Ecological Data Repositories & Field Platforms"
+author: "Phemelo Rutlokoane"
+date: "June 2025"
+format:
+  pptx: default
+---
+
+# Ecological Data Repositories & Field Platforms
+
+Harnessing Open Ecological Data for Research at Scale\
+Phemelo Rutlokoane — 2025
+
+# Why Ecological Data Matters
+
+-   Ecological systems are complex and variable\
+-   Long-term, large-scale data is needed\
+-   Open science = reproducibility + collaboration
+
+# Defining the Landscape
+
+-   Open data repositories\
+-   Field campaign platforms\
+-   Global and local examples\
+-   Emphasis on FAIR principles
+
+# GBIF – Global Biodiversity Info Facility
+
+-   Billions of species occurrence records\
+-   Darwin Core metadata standards\
+-   Strengths: scale, openness, citation\
+-   Limits: bias, lack of absences
+
+# NEON – U.S. Observatory Network
+
+-   81 sites across eco-climatic zones\
+-   Sensors + remote sensing + biotic surveys\
+-   Standardised, API-supported\
+-   Limits: only U.S., complexity
+
+# PANGAEA – Earth & Env Data
+
+-   Multidisciplinary georeferenced data\
+-   Curated metadata + DOIs\
+-   Excellent for oceanography, climate\
+-   Limits: mostly static data
+
+# LTER – Long Term Ecological Research
+
+-   U.S.-based, site-level long-term studies\
+-   Rich temporal resolution\
+-   Data via EDI (Environmental Data Initiative)\
+-   Limits: site heterogeneity
+
+# SAEON – South Africa’s Network
+
+-   Long-term ecological monitoring\
+-   Marine, terrestrial, limnology\
+-   Data platform: ulwazi.saeon.ac.za\
+-   Strength: National integration
+
+# DataONE – Aggregated Access
+
+-   Portal indexing datasets from many sources\
+-   Emphasis on metadata, discoverability\
+-   Supports Data Packages\
+-   Limits: metadata consistency
+
+# Atlas of Living Australia (ALA)
+
+-   Species distribution + citizen science\
+-   Portal and analytical tools\
+-   Linked to GBIF\
+-   Limits: Australia-specific
+
+# Case Study 1: Climate & Phenology
+
+-   GBIF + LTER = flowering time shifts\
+-   Global warming signal evident
+
+# Case Study 2: Invasives & Risk
+
+-   ALA + DataONE = species distribution models\
+-   Applied to biosecurity and risk mapping
+
+# Case Study 3: Ecosystem Services
+
+-   PANGAEA + SAEON: marine biodiversity + carbon flux\
+-   Ecological economics
+
+# Integration and Data Flows
+
+```{mermaid}
+
+flowchart LR
+  LTER --> EDI
+  NEON --> DataONE
+  SAEON --> DataONE
+  ALA --> GBIF
+  GBIF & DataONE --> Researchers
+```
