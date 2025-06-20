@@ -1,0 +1,161 @@
+---
+title: "BCB743 Task B Answers"
+author: "Phemelo Rutlokoane"
+date: "17 June 2025"
+format:
+  html:
+    toc: true
+    code-fold: false
+    code-line-numbers: true
+    highlight-style: github
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Task B {.panel-tabset}
+
+## Question 1
+
+### Load the required packages
+
+```{r}
+#| label: load-packages
+
+library(tidyverse)
+library(vegan)
+library(Hmisc) # for rcorr ()
+library(GGally) # an extension for ggplot2
+library(kableExtra) # used to render neat tables instead of the ugly raw tables
+```
+
+### Pairwise correlations
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| fig.align: center
+#| fig.cap: "Figure 1: Pairwise correlations of the environmental variables found in the Doubs River."
+#| label: fig_doubsenv_correlation
+
+# Load environmental data
+Doubs_env <- read_csv("labs_revision/DoubsEnv.csv")
+
+# Remove the first column of site numbers
+DoubsEnv <- Doubs_env[,-1]
+
+# Compute pairwise correlation matrix
+DoubsEnv_corr <- cor(DoubsEnv)
+
+# Visualise correlations
+GGally::ggcorr(DoubsEnv_corr, label = TRUE, label_size = 3, hjust = 0.75)
+```
+
+------------------------------------------------------------------------
+
+## Question 2
+
+### Top positive and negative statistically‐significant correlations
+
+```{r}
+#| label: corr-significance
+
+Doubscorr_res <- rcorr(as.matrix(DoubsEnv))
+corr_matrix <- Doubscorr_res$r
+p_matrix    <- Doubscorr_res$P
+
+# Extract unique pairs
+idx <- which(upper.tri(corr_matrix), arr.ind = TRUE)
+results <- tibble(
+  variable_1        = colnames(corr_matrix)[idx[,1]],
+  variable_2        = colnames(corr_matrix)[idx[,2]],
+  correlation = corr_matrix[idx],
+  p.value     = p_matrix[idx]) |> 
+  filter(p.value < 0.05)
+
+# Top 2 positive
+top_pos <- results |> 
+  arrange(desc(correlation)) |>  
+  slice(1:2)
+# Top 2 negative
+top_neg <- results |> 
+  arrange(correlation) |> 
+  slice(1:2)
+
+# Combine results and display top 2 positive and 2 negative correlations
+bind_rows(
+  top_pos |>  mutate(type = "Positive"),
+  top_neg |>  mutate(type = "Negative")) |> 
+  select(type, variable_1, variable_2, correlation, p.value) |> 
+  mutate(p.value = format(p.value, scientific = TRUE, digits = 2)) |> # changes p values to scientific notation due to Kable table being unable to fit the actual values
+  kable(
+    format = "html",
+    caption = "Top 2 positive and 2 negative significant correlations",
+    digits = 6) |> 
+  kable_styling(full_width = FALSE, position = "left")
+```
+
+------------------------------------------------------------------------
+
+## Question 3
+
+-   There is a strong negative relationship between the distance from source (dfs) and altitude (alt) because as you move downstream, the river loses height, resulting in a decrease in elevation.
+
+-   Altitude (alt) and flow (flo) have the second top-negative statistically significant correlations because high elevation headwaters carry little water, so the flow is low. As the river descends, more water is accumulates, increasing the volume and flow of the water; thus high altitudes have a low flow of water and low elevations have high water flow.
+
+-   Phosphate (pho) and ammonia (amm) have a strong positive correlation because they often come from the same source such as agricultural runoff or organic waste. When one is high, the other will typically be high too.
+
+-   Distance from source (dfs) and flow (flo) have the second highest positive correlation because moving downstream away from the source adds more tributaries and runoff, which results in an increased volume and flow of the stream.
+
+------------------------------------------------------------------------
+
+## Question 4
+
+The reason we need to transpose data is because most association functions treat the rows as observations instead of the columns. In order for us to analyse the relationships between species, the rows must represent the species, or else we would just have functions comparing our sites as if they were the species, which in the end would produce meaningless results.\
+\
+Below is a demonstration of how to transpose species data:
+
+```{r}
+#| label: transpose-demo
+
+# Load species abundance data
+DoubsSpe <- read_csv("labs_revision/DoubsSpe.csv")
+
+# Remove the first column
+DoubsSpe <- DoubsSpe[,-1]
+
+# Dissimilarity on original (rows = sites)
+DoubsDiss <- vegdist(DoubsSpe, method = "bray")
+
+# Transposed (rows = species)
+species_t <- t(DoubsSpe)
+trans_dist <- vegdist(species_t, method = "bray")
+
+# Compare dimensions
+cat("Original vegdist length:", length(DoubsDiss), "– transposed:", length(trans_dist))
+```
+
+------------------------------------------------------------------------
+
+## Question 5
+
+A transposed species table has species on the rows instead of the columns, and the sites are also changed from being on the rows section to the columns section.
+
+------------------------------------------------------------------------
+
+## Question 6
+
+An association matrix tells us how each pair of species or taxa co-occur. The positive values or values closer to 1 indicate pairs that tend to appear together more often, negative values or values closer to 0 indicate pairs that tend to avoid each other, and values on the diagonal are zero. This matrix differs from a dissimilarity matrix because a dissimilarity matrix quantifies the ecological distance between sites. All the values in the cells are positive and range from 0 (identical) to 1 (dissimilar). The diagonal values are 0. An association matrix also differs to a correlation matrix in a sense that a correlation matrix standardises the linear relation relationships between variables. The values in the cells range from -1 to 1, where 1 indicates a positive strong correlation and -1 indicates a strong negative correlation. The values on the diagonal are 1.
+
+------------------------------------------------------------------------
+
+## Question 7
+
+The difference between spp_assoc1 and spp_assoc2 is that spp_assoc1 makes the an association matrix using quantitative Jaccard (abundance), whereby spp_assoc2 first transforms the data into binary Jaccard (presence-absence) using `binary =`, making an association matrix from presence-absence data.
+
+------------------------------------------------------------------------
+
+## Question 8
+
+We were able to learn that a species association matrix shows us which species tend to appear together or apart across various sites. We also learnt that positive values or values close to 1, are the ones that will tell us that pairs co-occur while negative values or values close to 0 tell us which pair avoid one another. This information can be ecologically interpreted as pairs with positive values having shared habitat preferences or positive interactions with one another, while negative values or values closer to 0 representing pairs with differeing niches or pairs that compete with one another.
