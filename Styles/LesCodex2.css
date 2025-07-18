@@ -1,0 +1,205 @@
+/*──────────────────────────────────────────────────────────────────────────────*/
+/*  1. TOP-LEVEL NAV LINKS: NEON GLOW + CENTER-OUT UNDERLINE ON HOVER        */
+/*──────────────────────────────────────────────────────────────────────────────*/
+nav.navbar .navbar-nav .nav-link {
+  position: relative !important;
+  overflow: hidden !important;
+  color: #cfcfcf !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-size: 0.95rem !important;
+  margin-right: 1.5rem !important;
+  transition: color 0.2s ease-in-out, text-shadow 0.2s ease-in-out !important;
+}
+
+nav.navbar .navbar-nav .nav-link::after {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 50% !important;
+  width: 0 !important;
+  height: 2px !important;
+  background-color: #6ac1ff !important;
+  transition: width 0.3s ease, left 0.3s ease !important;
+}
+
+nav.navbar .navbar-nav .nav-link:hover::after {
+  width: 100% !important;
+  left: 0 !important;
+}
+
+nav.navbar .navbar-nav .nav-link:hover {
+  color: #ffffff !important;
+  text-shadow: 0 0 8px rgba(106, 193, 255, 0.8) !important; /* neon-blue glow */
+  transform: translateY(-2px) !important;
+}
+
+/*──────────────────────────────────────────────────────────────────────────────*/
+/*  2. DROPDOWN MENU: FADE & SLIDE-IN, TECH-YET-WARM PALETTE                   */
+/*──────────────────────────────────────────────────────────────────────────────*/
+nav.navbar .dropdown-menu {
+  background: #1a1a2e !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  padding: 0.5rem 0 !important;
+  transform: translateY(10px) !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.25s ease, transform 0.25s ease !important;
+  min-width: 200px !important;
+}
+
+nav.navbar .dropdown.show > .dropdown-menu {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+nav.navbar .dropdown-menu .dropdown-item {
+  color: #e0e0e0 !important;
+  padding: 0.5rem 1.25rem !important;
+  transition: background 0.2s ease-in-out, color 0.2s ease-in-out !important;
+  font-size: 0.9rem !important;
+}
+
+nav.navbar .dropdown-menu .dropdown-item:hover,
+nav.navbar .dropdown-menu .dropdown-item:focus {
+  background: rgba(106, 193, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+nav.navbar .dropdown-menu .dropdown-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  margin: 0.25rem 0 !important;
+}
+
+/*──────────────────────────────────────────────────────────────────────────────*/
+/*  3. INLINE CODE & BLOCK CODE: ENSURE LINKS ARE VISIBLE                     */
+/*──────────────────────────────────────────────────────────────────────────────*/
+pre, .quarto-code {
+  background-color: var(--quarto-block-bg) !important;
+  border-radius: 6px !important;
+  padding: 1rem !important;
+  overflow-x: auto !important;
+  box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+code {
+  background-color: var(--quarto-code-bg) !important;
+  padding: 0.15em 0.3em !important;
+  border-radius: 3px !important;
+  font-size: 0.95em !important;
+  color: var(--quarto-body-color) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  code a,
+  .quarto-code a {
+    color: #444 !important;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  code a,
+  .quarto-code a {
+    color: #0077cc !important;
+  }
+}
+
+/*──────────────────────────────────────────────────────────────────────────────*/
+/*  4. LINKS & BUTTONS                                                         */
+/*──────────────────────────────────────────────────────────────────────────────*/
+a {
+  color: #0077cc !important;  /* classic hyperlink blue */
+  text-decoration: none !important;
+  transition: text-shadow 0.2s ease-in-out !important;
+}
+
+a:hover {
+  text-shadow: 0 0 4px #0077cc !important;
+}
+
+a.btn,
+button {
+  display: inline-block !important;
+  background: linear-gradient(135deg, #6ac1ff 0%, #3c9ce0 100%) !important;
+  color: #1a1a1a !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  transition: background 0.2s ease-in-out, transform 0.1s ease-in-out !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+  text-decoration: none !important;
+}
+
+a.btn:hover,
+button:hover {
+  background: linear-gradient(135deg, #3c9ce0 0%, #6ac1ff 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35) !important;
+}
+
+/*──────────────────────────────────────────────────────────────────────────────*/
+/*  5. NAVBAR & LOGO                                                            */
+/*──────────────────────────────────────────────────────────────────────────────*/
+nav.navbar a[aria-label="Les Codex Home"] {
+  display: flex !important;
+  align-items: center !important;
+}
+
+nav.navbar {
+  background: linear-gradient(135deg, #0f1630, #1a1a2e) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+  border-bottom-left-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+  padding: 0.5rem 2rem !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+}
+
+/*──────────────────────────────────────────────────────────────────────────────*/
+/*  6. FOOTER                                                                   */
+/*──────────────────────────────────────────────────────────────────────────────*/
+footer {
+  margin-top: 4rem !important;
+  padding: 1.5rem 0 !important;
+  text-align: center !important;
+  font-size: 0.9rem !important;
+  color: #aaaaaa !important;
+  border-top: 1px solid var(--quarto-border-color) !important;
+}
+
+footer a {
+  color: #cfcfcf !important;
+  margin: 0 0.5rem !important;
+  transition: color 0.2s ease-in-out, text-shadow 0.2s ease-in-out !important;
+}
+
+footer a:hover {
+  color: #6ac1ff !important;
+  text-shadow: 0 0 4px rgba(106, 193, 255, 0.7) !important;
+}
+
+/*──────────────────────────────────────────────────────────────────────────────*/
+/*  7. RESPONSIVE TWEAKS                                                        */
+/*──────────────────────────────────────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  nav.navbar {
+    padding: 0.5rem 1rem !important;
+  }
+
+  nav.navbar .navbar-nav .nav-link {
+    margin-right: 1rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  nav.navbar .dropdown-menu .dropdown-item {
+    font-size: 0.85rem !important;
+    padding: 0.4rem 1rem !important;
+  }
+}
