@@ -1,0 +1,179 @@
+---
+title: "non-Metric Multidimensional Scaling (nMDS)"
+author: "Phemelo Rutlokoane"
+date: "20 June 2025"
+format:
+  html:
+    toc: true
+    code-fold: false
+    code-line-numbers: true
+    highlight-style: github
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## BCB743 Task F Answers {.panel-tabset}
+
+## Question 1
+
+### Load mite data
+
+```{r}
+
+# Load vegan and mite data
+library(vegan)
+data(mite)
+```
+
+### i) Correspondence Analysis
+
+```{r}
+
+# Run Correspondence Analysis
+mite_ca <- cca(mite)
+
+# Summary of the CA results
+summary(mite_ca)
+```
+
+### Scree plot to visualise eigenvalues
+
+```{r}
+
+# Scree plot to visualize eigenvalues
+screeplot(mite_ca, bstick = TRUE, type = "lines")
+```
+
+### Plot ordination
+
+```{r}
+
+# Plot CA ordination
+plot(mite_ca, scaling = 1, main = "CA of Mite Data - Site Scaling")
+plot(mite_ca, scaling = 2, main = "CA of Mite Data - Species Scaling")
+```
+
+### Interpretation
+
+I found that the biplots of the mite data have CA1 and CA2 explaining 44% of the variation, only up until CA3 does the variation explained exceed 50%. CA1 in the site-scaled biplot explains that majority of the mite species are found in lower sites (5-29). The species-scaled biplot explains that most species will be found together at these sites (5 - 29) and that these species are now almost clustered around the center, meaning that they make have some interactions with one another, specially at sites (5 - 29)
+
+### ii) non-Metric Distance
+
+```{r}
+
+mite_nmds <- metaMDS(mite, distance = "bray", trace = 0)
+mite_nmds
+```
+
+### Show the species and site scores
+
+```{r}
+
+scores(mite_nmds)
+```
+
+### Ordination plots
+
+```{r}
+
+opar <- par(no.readonly = TRUE)
+par(mfrow = c(2, 2))
+stressplot(mite_nmds, main = "Shepard plot")
+ordiplot(mite_nmds, type = "t", cex = 1.2,
+         main = paste0("nMDS stress = ", round(mite_nmds$stress, 2)))
+gof <- goodness(mite_nmds)
+plot(mite_nmds, type = "t", cex = 1.2, main = "Goodness of fit")
+points(mite_nmds, display = "sites", cex = gof * 200)
+# ...bigger bubbles indicate a worse fit
+par(opar)
+```
+
+### Interpretation
+
+NMDS can simply be interpreted by "distance equals to dissimilarity", where the species are closer to each other indicates similarity of sites or environmental variables influencing them, the further the distance, the more dissimilar they become. A useful way to address whether or not the NMDS is appropriate is to compare the results using the Sherpard plot and Goodness of fit. In the goodness of fit, the larger circles indicate sites that are poorly fitted, which in our case, site 29, 48, 57 and 62 are our largest circles.
+
+## Question 2
+
+### Load the dune data
+
+```{r}
+
+data(dune)
+```
+
+### i) **Principal Component Analysis (PCA)**
+
+```{r}
+dune_pcoa <- capscale(dune ~ 1, distance = "bray")
+dune_pcoa
+```
+
+### Summary output
+
+```{r}
+
+summary(dune_pcoa)
+```
+
+### Ordination plots
+
+```{r}
+
+opar <- par(no.readonly = TRUE)
+par(mfrow = c(1, 2))
+pl1 <- ordiplot(dune_pcoa, type = "none", scaling = 1,
+                main = "PCoA dune abundances - biplot scaling 1")
+points(pl1, "sites", pch = 21, cex = 1.75, col = "grey80", bg = "grey80")
+points(pl1, "species", pch = 21, col = "turquoise", arrows = FALSE)
+text(pl1, "species", col = "blue4", cex = 0.9)
+text(pl1, "sites", col = "red4", cex = 0.9)
+
+pl2 <- ordiplot(dune_pcoa, type = "none", scaling = 2,
+                main = "PCoA dune abundances - biplot scaling 2")
+points(pl2, "sites", pch = 21, cex = 1.75, col = "grey80", bg = "grey80")
+points(pl2, "species", pch = 21, col = "turquoise", arrows = FALSE)
+text(pl2, "species", col = "blue4", cex = 0.9)
+text(pl2, "sites", col = "red4", cex = 0.9)
+par(opar)
+```
+
+### Interpretation
+
+The ordination plots were made with `ordiplot()` and show site scaling on the left and species scaling right. The relationship of the species is not linear. Looking at the site-scaled plot, we can see that majority of the species do fall within the sites, while a few others are not that abundant at the given sites, this could be a result of these species being rare. When looking at the species-scaled plot, we can see that majority of the species are being clustered at the center of the plot. This suggests that these species most often interact with one another and will be found where the other is present. MDS1 and MDS2 explained about 60% of variance, which make me confident in the results.
+
+### ii) non-Metric Distance
+
+```{r}
+
+dune_nmds <- metaMDS(dune, distance = "bray", trace = 0)
+dune_nmds
+```
+
+### Show the species and site scores
+
+```{r}
+
+scores(dune_nmds)
+```
+
+### Ordination plots
+
+```{r}
+
+opar <- par(no.readonly = TRUE)
+par(mfrow = c(2, 2))
+stressplot(dune_nmds, main = "Shepard plot")
+ordiplot(dune_nmds, type = "t", cex = 1.2,
+         main = paste0("nMDS stress = ", round(dune_nmds$stress, 2)))
+gof2 <- goodness(dune_nmds)
+plot(dune_nmds, type = "t", cex = 1.2, main = "Goodness of fit")
+points(dune_nmds, display = "sites", cex = gof2 * 200)
+# ...bigger bubbles indicate a worse fit
+par(opar)
+```
+
+### Interpretation
+
+The NMDS plot shows that the dune species are influenced by similar environmental variables. The shepard plot has most points laid further away from the regression line, which indicates that the NMDS has a poor fit. This is also shown in the goodness of fit plot, which suggests that the larger the circles, the poorer the fitness.

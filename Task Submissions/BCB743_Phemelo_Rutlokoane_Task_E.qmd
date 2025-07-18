@@ -1,0 +1,272 @@
+---
+title: "Correspondence Analysis (CA)"
+author: "Phemelo Rutlokoane"
+date: "30 June 2025"
+format:
+  html:
+    toc: true
+    code-fold: false
+    code-line-numbers: true
+    highlight-style: github
+    number_sections: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## BCB 743 task E answers {.panel-tabset}
+
+## Question 1
+
+The ordination plots show how the species *Salmo trutta farlo* (A; Satr), *Scardinius erythrophthalmus* (B; Scer), *Telestes souffia* (C; Teso), and *Cottus gobio* (D; Cogo) change abundance across ordination space. In plot A, Satr shows linearity, illustrated by the straight lines. The circles enlarge with an increase in species abundace. Most of the large circles lie at the right side of the plot, where sites 1 - 17 are found. This means that Satr is mostly found near the river's mouth up to some intermediate parts of the river. As you move down the river to sites 18 - 30, their abundance decreases, and is shown by the circles being smaller and smaller. The species is most abundant in sites 15 and 16.
+
+Plot B of *Scardinius erythrophthalmus* does not have show the species having any linear relationship as compared to plot A. This can been by the curvature of the green lines which form almost a circular pattern, suggesting non-linear responses. The plot shows that Scer is most abundant in site 30, which has the biggest circle. As you move further away from site 30, moving towards site 1, the abundance of this species decreases.
+
+Plot C of *Telestes souffia also has a similar pattern to plot B, they do not show any linear responses. However, unlike plot B, this one has Tesco* being most abundant on site 15 and 16, and their abundance decreases as you move away from the two sites.
+
+Plot D now included environmental variables to the species, giving us an idea of which environmental variables have an influence on the abundance and distribution of these species. In the plot we can see that site 15 has the highest abundance, and that high abundance is as result of the oxygen in the environment since the oxygen arrow is facing towards the direction where Cogo is abundant.
+
+## Question 2
+
+### Load the required packages
+
+```{r}
+#| label: load-packages
+
+library(tidyverse)
+library(vegan)
+library(Hmisc) # for rcorr ()
+library(ggcorrplot) # for the correlations
+library(ggpubr)
+```
+
+### i) Alpine **plant communities in Aravo, France**
+
+```{r}
+#| label: Alpine-load-fdata
+
+# load the data
+library (ade4)
+data (aravo)
+
+# pull out the species data
+aravo_spe <- aravo$spe
+```
+
+### Do CA of the species data
+
+```{r}
+aravo_ca <- cca(aravo_spe)
+aravo_ca
+```
+
+### Detailed summary of aravo_ca
+
+```{r}
+summary(aravo_ca)
+```
+
+### Calculate the fraction of variance explained by CA1 and CA2
+
+```{r}
+#| label: calc-var-perc
+
+round(sum(aravo_ca$CA$eig[1:2]) / sum(aravo_ca$CA$eig) * 100, 2) # result in %
+```
+
+### Make a scree plot to show eigenvalues of the CA axis
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| fig.align: center
+#| fig.cap: "Figure 1: Scree plot of the Alpine plant communities in Aravo, France."
+#| label: scree-plot
+
+# make a scree plot using the vegan function:
+screeplot(aravo_ca, bstick = TRUE, type = "lines")
+```
+
+### Visualising the ordinations
+
+### Prepare environmental data
+
+```{r}
+
+# pull out the environmnetal data
+aravo_env <- aravo$env
+
+# select data with only numerical values
+aravo_env <- aravo_env |> 
+  select(Slope, PhysD, Snow)
+```
+
+### Add the environmental vectors on the correspondence analysis
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| fig.align: center
+#| fig.cap: "Figure 2: Correspondance analysis of the Alpine plant communities in Aravo, France showing species scaling with environmental vectors projected on the plot."
+#| label: ca-aravo
+
+opar <- par(no.readonly = TRUE)
+par(mfrow = c(1, 1), mar = c(4, 4, 3, 1))
+
+# 1) Base plot with sites only (optional)
+plot(aravo_ca,
+     choices = c(1, 2),
+     scaling = 2,
+     display = "sites",
+     type    = "p",
+     pch     = 21,
+     bg      = "lightgrey",
+     main    = "CA1 vs CA2: Sites, Species & Env")
+
+# 2) Add species labels in blue
+orditorp(aravo_ca,
+         choices = c(1, 2),
+         scaling = 2,
+         display = "species",
+         col     = "blue",
+         cex     = 0.8,
+         air     = 0.01)
+
+# 3) Overlay env vectors
+aravo_ca_env <- envfit(aravo_ca, aravo_env, scaling = 2)
+plot(aravo_ca_env, p.max = 0.05, col   = "red", add   = TRUE)
+
+par(opar)
+```
+
+### ii) **Bird communities along elevation gradient in Yushan Mountain, Taiwan**
+
+```{r}
+#| label: load-birds
+
+# Load species data
+ybirds_spe <- read.delim ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/ybirds_spe.txt', row.names = 1)
+
+# Load environmental data
+ybirds_env <- read.delim ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/ybirds_env.txt', row.names = 1)
+
+# remove first two columns from environmnetal data
+ybirds_env <- ybirds_env[,3:20]
+```
+
+### Do CA of the species data
+
+```{r}
+
+ybirds_ca <- cca(ybirds_spe) 
+ybirds_ca
+```
+
+### Detailed summary of ybirds_ca
+
+```{r}
+
+summary(ybirds_ca)
+```
+
+### Plot ordinations
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| fig.align: center
+#| fig.cap: "Figure 3: Correspondance analysis of the bird communities along elevation gradient in Yushan Mountain, Taiwan showing species scaling with environmental vectors projected on the plot."
+
+par(mfrow = c(1, 1))
+
+# 1) Base plot with sites only (optional)
+plot(ybirds_ca,
+     choices = c(1, 2),
+     scaling = 2,
+     display = "sites",
+     type    = "p",
+     pch     = 21,
+     bg      = "lightgrey",
+     main    = "CA1 vs CA2: Sites, Species & Env")
+
+# 2) Add species labels in blue
+orditorp(ybirds_ca,
+         choices = c(1, 2),
+         scaling = 2,
+         display = "species",
+         col     = "blue",
+         cex     = 0.8,
+         air     = 0.01)
+
+# 3) Overlay env vectors
+ybirds_ca_env <- envfit(ybirds_ca, ybirds_env, scaling = 2)
+plot(ybirds_ca_env, p.max = 0.05, col   = "red", add   = TRUE)
+
+par(opar)
+```
+
+## Question 3
+
+### i) Alpine **plant communities in Aravo, France** interpretation
+
+Looking at the proportion of variation explained in `summary(aravo_ca)`, the first two CAs did not have a high enough proportion of variation (\<60%) to make me confident that my interpretation of the first two PCAs has the most relevant information from the data. I came to the conclusion that the first 10 CAs have an enough proportion of variation (66%). The scree plot does however show a good amount of steepness in the inertia of the first two CAs, which makes it safe for me to filter my discussion to CA1 and CA2.
+
+In the ordination plot, scaling 2 was used because it emphasises the relationship between variables. The plot shows a horseshoe effect, which is sort of like an n-shaped or u-shaped pattern made by the points in the ordination plot. This means that there is a strong environmental variable that influences the data, and looking at the plot, the variable are slope and physical disturbance (PhysD). As the slope and physical disturbance increases, more alpine plant species can be found. The longer arrow for snow indicates a higher correlation to the species. Given that majority of the species are leaning more towards the right in the ordination plot for CA1, I would say that most of the species' distribution is slightly affected by slope and PhysD.
+
+### ii) **Bird communities along elevation gradient in Yushan Mountain, Taiwan interpretation**
+
+From `summary(ybirds_ca)`, we can observe that CA1 explains 37% of the variation and CA2 explains 16% of the variation, together that accumulates to 53%. Looking at the ordination plot, CA1 shows that tree density (TD), secondary tree cover (T2C), and tree species diversity (TSD) have an influence to majority of the bird species found in Yushan Mountain. This is because there is a large cluster of species on the right side of the plot just near the TD arrow. CA2 explains that shrub cover has an influence on the distribution of these clustered species.
+
+Given that most species cluster right around the center of the plot, ALA is the only species that is is furthest away from any other species, which might suggest that is a specialist. CA shows that ground cover (GC) has the strongest influence on the distribution of ALA than other variables.
+
+## Question 4
+
+### Load the Doubs river data
+
+```{r}
+
+load("labs_revision/Doubs.RData")
+
+# Identify row that sums up to zero
+apply(spe, 1, sum)
+
+# Remove row 8
+spe <- spe[rowSums(spe) > 0, ]
+```
+
+### Do the CA
+
+```{r}
+
+spe_ca <- cca(spe)
+spe_ca
+```
+
+### Replicating the Cogo plot
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| fig.align: center
+#| fig.cap: "Figure 4: Correspondance analysis ordination plot of the Doubs River species data showing species scaling with environmental vectors projected on the plot, with the significant vectors shown in red."
+
+library(viridis)
+
+palette(viridis(8)) # Set colour palette
+
+invisible(ordisurf(spe_ca ~ Cogo, data = spe, bubble = 3,
+                   family = quasipoisson, knots = 2, col = 6,
+                   display = "sites", main = "Cottus gobio"))
+abline(h = 0, v = 0, lty = 3)
+
+env <- env[-8, ] # Because the eighth row in the species data was removed
+
+# A posteriori projection of environmental variables in a CA
+# The last plot produced (CA scaling 2) must be active
+spe_ca_env <- envfit(spe_ca, env, scaling = 2) # Scaling 2 is default
+plot(spe_ca_env)
+
+# Plot significant variables with a different colour
+plot(spe_ca_env, p.max = 0.05, col = "red")
+```

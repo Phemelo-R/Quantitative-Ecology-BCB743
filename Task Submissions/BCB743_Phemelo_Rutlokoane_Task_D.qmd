@@ -1,0 +1,49 @@
+---
+title: "PCA of WHO SDGs"
+author: "Phemelo Rutlokoane"
+date: "30 June 2025"
+format:
+  html:
+    toc: true
+    code-fold: false
+    code-line-numbers: true
+    highlight-style: github
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## BCB743 task D answers {.panel-tabset}
+
+## Question 1
+
+### Section 1: Loading packages
+
+In this section, packages to be used in the analysis were being loaded using the `library()` function. Tidyverse was loaded for data manipulation, data cleaning, and visualisation; vegan was loaded for conducting specialized for ecological analyses, including ordination methods such as PCA, NMDS, and CA; missMDA was loaded for handling missing values with multivariate data analysis, using methods such as PCA-based imputation; and ggcorrplot was loaded for creating correlation plots to visualise pairwise relationships between variables. These packages are the backbone of the data analysis and data processing. They make it simple and doable in R.
+
+### Section 2: Loading and processing data
+
+The analysis starts off by loading multiple health indicators from WHO datasets. Each indicator corresponds to specific Sustainable Development Goals (SDGs) targets (e.g., child mortality, new HIV infections, malaria incidence, etc.). Each dataset is filtered using the `filter()` function for a consistent time period, majority being in 2016. From there, the `select()` function is used ti select relevant columns ("Indicator", "ParentLocation", "Location", "FactValueNumeric") to focus on the indicator name, the location they were measured, and numeric values. Lastly, the `mutate()` function is used to add the column "SDG", which will identify which SDG the data belongs to. The rationale behind doing this is to have consistent labeling in the data and ensures that there is only relevant data or columns used in the dataset.
+
+### Section 3: Merging data
+
+In this section, the `sapply()` function is used to look into the global environment for objects that are data frames and then row‑binds them all into a single, tall table called "health". From there, `write.csv()` is used to save the table into a .csv file called WHO_health/SDG_complete. The `unique()` output was the SDG_description.csv which gives us a description of the different SDGs that are found in the WHO_health/SDG_complete file.
+
+### Section 4: Reshaping the data
+
+The `pivot_wider()` function is used to transform the data from a long format to a wide format. The column for indicators was removed, as seen by `select(-Indicator)`, and the SDGs were set as columns while the rows were the countries (Location). The data was converted into wide format to make it suitable for PCA analysis since the analysis requires the columns to be variables (Indicators) and sites (countries) as rows.
+
+### Section 5: Adding population data
+
+The population data from "WHO_populations.csv" was loaded and merged with the health dataset (wide version of health) and was merged using country names. From there a new column was created named "popl_size", which was a numeric format and had the population size of each country. The population data is what allows for normality of certain health indicators since some are "per 100 000". This allowed for comparison between countries with different population sizes. The population size for each SDG were then multiplied by 100 000 in order to scale them appropriately.
+
+### Section 6: Handling missing values and correlation
+
+Firstly, a histogram of missing values was plotted. This histogram visualises the distribution of counts with missing values per row (country). Secondly, the data was then filtered to exclude countries that have more than 10 missing indicators. This was to retain countries with sufficient data. After that, a correlation analysis was done and plotted to show the pairwise correlations between indicators. The correlation plot showed multicollinearity among the indicators. Lastly, the `imputePCA()` function was used, and it uses PCA-based imputation to estimate missing values. What this did was fills in the gaps in the dataset, which enabled PCA to proceed without omitting any rows with missing data.
+
+### Section 7: PCA Analysis
+
+The data was first standardised to ensure that the variables had equal weightings. From there, a PCA was was performed using the `rda()` function from vegan, also known as the redundancy analysis. The reason a PCA was done was because it reduces dimensionality and identifies patterns of variability in the dataset. Three plots were made, biplots with scaling 1 (focuses on distance relationships between countries) and scaling 2 (emphasizes correlations between indicators), and a ggplot ordination. What these ordination plots do is visualise the relationships between countries and indicators. The ggplot in particular is an enhanced version of the normal biplots. It coloured countries by their region (e.g. Africa, Americas, Europe, etc.). This plot in particular shows how health disparities differ by region and which indicator clusters with specific regions.
+
+The ordination plots in general can be interpreted as: Countries that are grouped by ParentLocation in ordination space share similar health disparities; similar metrics align next to one another for example; birth rate metric opposes mortality metric for example. Overall the SDG analysis code was showing us how data is handled, processed, and visualised as results.

@@ -1,0 +1,251 @@
+---
+title: "Principal Component Analysis (PCA)"
+author: "Phemelo Rutlokoane"
+date: "20 June 2025"
+format:
+  html:
+    toc: true
+    code-fold: false
+    code-line-numbers: true
+    highlight-style: github
+    number_sections: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## BCB 743 task C answers {.panel-tabset}
+
+## Question 1
+
+### Load the required packages
+
+```{r}
+#| label: load-packages
+
+library(tidyverse)
+library(vegan)
+library(Hmisc) # for rcorr ()
+library(ggcorrplot) # for the correlations
+library(ggpubr)
+```
+
+### Pairwise correlations
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| fig.align: center
+#| fig.cap: "Pairwise correlations of the environmental variables found in the Doubs River."
+#| label: fig_doubsenv_correlation
+
+# Load environmental data
+load("labs_revision/Doubs.RData")
+
+# Compute pairwise correlation matrix
+DoubsEnv_corr <- round(cor(env),1)
+
+# Visualise correlations
+ggcorrplot(DoubsEnv_corr, type = 'lower', outline.col = "white",
+           colors = c("steelblue1", "white", "red"),
+           lab = TRUE)
+```
+
+In order to create spatial maps, we have to use the spatial data (`spa`) made available to us:
+
+```{r}
+#| label: spatial-data
+
+head(spa)
+```
+
+From here, I can create spatial maps of scaled variables:
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| fig.align: center
+#| fig.cap: "Spatial maps of the scaled variables that are strongly correlated."
+#| label: fig-doubsenv-spatial-map
+
+# scale the variables to the same scale
+env_std <- decostand(env, method = "standardize")
+
+# positive correlations
+plt1 <- ggplot(spa, aes(x = X, y = Y, label = rownames(spa))) +
+  geom_point(shape = 1, col = "navy", aes(size = env_std$amm, shape = 3)) +
+  geom_text(vjust = -0.5, nudge_y = 0.5, check_overlap = TRUE) +
+  labs(size = "Magnitude", title = "Ammonium concentration")
+
+plt2 <- ggplot(spa, aes(x = X, y = Y, label = rownames(spa))) +
+  geom_point(shape = 1, col = "navy", aes(size = env_std$bod)) +
+  geom_text(vjust = -0.5, nudge_y = 0.5, check_overlap = TRUE) +
+  labs(title = "Biological oxygen demand")
+
+plt3 <- ggplot(spa, aes(x = X, y = Y, label = rownames(spa))) +
+  geom_point(shape = 1, col = "navy", aes(size = env_std$pho)) +
+  geom_text(vjust = -0.5, nudge_y = 0.5, check_overlap = TRUE) +
+  labs(title = "Phosphate concentration ")
+
+plt4 <- ggplot(spa, aes(x = X, y = Y, label = rownames(spa))) +
+  geom_point(shape = 1, col = "navy", aes(size = env_std$dfs)) +
+  geom_text(vjust = -0.5, nudge_y = 0.5, check_overlap = TRUE) +
+  labs(title = "Distance from source")
+
+plt5 <- ggplot(spa, aes(x = X, y = Y, label = rownames(spa))) +
+  geom_point(shape = 1, col = "navy", aes(size = env_std$dis)) +
+  geom_text(vjust = -0.5, nudge_y = 0.5, check_overlap = TRUE) +
+  labs(title = "Mean minimum discharge")
+
+ggarrange(plt1, plt2, plt3, plt4, plt5, nrow = 2, ncol = 3,
+          common.legend = TRUE, labels = "AUTO")
+```
+
+### Interpretation
+
+When looking at sites 1 up to 14 - 16, we can see that there is little to no nutrients in the river, and there is low biological oxygen demand (`BOD`). This is due to the sites being located at river's head, where the water is mostly oligotrophic and the steep slope and small catchment area keeps nutrient loads and `BOD` low. As we move towards the middle of the river, at sites 17 - 25, we can see the magnitude of the graphs A - E increasing judging by the enlargement of the circles. This is because the distance from the source increases, and with that increase comes an increase in the baseflow of the water, resulting in the accumulation of sediments and detritus. The increase in phostaphates, ammonium and `BOD` could be caused by nutrient runoff from a nearby town or village in those sites or microbes mineralising organic material.
+
+## Question 2
+
+The first thing we have to do is to do a PCA with the function `rda()` as shown below:
+
+```{r}
+#| label: do-pca
+
+env_pca <- rda(env, scale = TRUE) # scale = TRUE sets the variables to scale
+env_pca
+```
+
+After doing a PCA of the environmental variables, we can show the results in a verbose summary:
+
+```{r}
+#| label: summary-pca
+
+summary(env_pca)
+```
+
+## Question 3
+
+A PCA, or any other ordination do not explain all of the variation in a dataset because they are orthogonal (uncorrelated) to each other. They are also linear combinations of the original variables that maximise the variance in the data. The first principal component captures the greatest variance, with the second principal component capturing the next largest and so forth. The remaining PC axes are the residual variation.
+
+## Question 4
+
+### (i) **Alpine plant communities in Aravo, France**
+
+```{r}
+#| label: load-airplaneplant-data
+
+# install airplane plant data package
+# install.packages ('ade4')
+
+# load the data
+library (ade4)
+data (aravo)
+
+# pull out the environmental data
+aravo_env <- aravo$env
+
+# select data with only numerical values
+aravo_env2 <- aravo_env |> 
+  select(Slope, PhysD, Snow)
+```
+
+### Do PCA of Aravo environmental data
+
+```{r}
+#| label: aravo-pca
+
+aravo_pca <- rda(aravo_env2, scale = TRUE)
+```
+
+### Summary of the Aravo PCA
+
+```{r}
+#| label: summary-aravo
+
+summary(aravo_pca)
+```
+
+### Plot ordination of Aravo
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| fig.align: center
+#| fig.cap: "Ordination plot of Aravo environmental data showing variable scaling."
+#| label: fig-aravo-ordin-map
+
+source("cleanplot.pca.R")
+cleanplot.pca(aravo_pca, scaling = 2)
+```
+
+------------------------------------------------------------------------
+
+### (ii) **Bird communities along elevation gradient in Yushan Mountain, Taiwan**
+
+### Load the bird data
+
+```{r}
+#| label: load-bird-data
+
+ybirds.env <- read.delim ('https://raw.githubusercontent.com/zdealveindy/anadat-r/master/data/ybirds_env.txt', row.names = 1)
+
+# remove first two columns
+ybirds_env <- ybirds.env[,3:20]
+```
+
+### Do the PCA
+
+```{r}
+#| label: ybirds-pca
+
+ybirds_pca <- rda(ybirds_env, scale = TRUE)
+```
+
+### Summary of the PCA
+
+```{r}
+#| label: summary-pca-ybirds
+
+summary(ybirds_pca)
+```
+
+### Plotting ordination diagrams
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| fig.align: center
+#| fig.cap: "Ordination plot of Yushan Mountain environmental data showing variable scaling"
+#| label: fig-ybirds-ordin-map
+
+source("cleanplot.pca.R")
+cleanplot.pca(ybirds_pca, scaling = 2)
+```
+
+------------------------------------------------------------------------
+
+## Question 5
+
+### 1. **Alpine plant communities in Aravo, France**
+
+\(i\) The ordination plot for Aravo in Figure 2, has a scaling of 2, which emphasises the relationship between environmental variables accurately in low-dimensional ordination space. The proportion of variance accounted for by PCA 1 and PCA 2 is 84%, which is a high enough value to make us confident that our interpretation of the first two PCAs has the most relevant information from the data. The ordination plot shows us that slope and physical disturbance (`PhysD`) have orthogonal arrows (forming a 90° angle), indicating a correlation close to 0. Slope and snow have a negative correlation. If the slope increases, the mean snowmelt (`snow`) will decrease. The same goes for physical disturbance and snow, they have a negative correlation with one another. A decrease in the percentage of unvegetated soil due to physical processes results in an increase in mean snowmelt.
+
+\(ii\) Looking at the Alpine plant communities in Aravo, as you increase in elevation or altitude up a mountain, the slope increases and the angles of the mountain become sharper or pointy, this now results in the snow falling on those points to not be able settle and accumulate properly as it is influenced by gravity which will make the snow fall down slope. In gentler slopes at lower elevations of the mounatin, the snow can get trapped in those areas. So all in all, snow gets shed in steeper terrains rapidly while gentle terrains retain more snow, allowing it to melt longer as time passes by.
+
+\(iii\) Slope and snow (*r* = -0.4) , as well as physical disturbance with snow (*r* = -0.3) have a negative correlation. Steeper slopes shed more snow because gravity and wind move the snow downslope. So as the slope increases, the mean snow cover decreases and the mean snowmelt at higher slopes also decreases. Land that has unvegetated soil most likely acts as a drainage channgel for water or snow that falls on it. because the bare ground is exposed, the snow that lands there will melt faster.
+
+### 2. **Bird communities along elevation gradient in Yushan Mountain, Taiwan**
+
+\(i\) In the bird communities biplot, which also has a scaling of 2, the proportion of variance accounted for by PCA 1 and PCA 2 is 71%, which I think is a high enough value to make us confident that our interpretation of the first two PCAs has the most relevant information from the data. In the ordination plot, we can observe a strong positive correlation between `TSD` and `TD`, `T2C` and `ASP`, `CP` and `ELE`, and `MDB`, `SDDB`, and `TBA`. Slope (`SLP`) is positively correlated with `ELE`, `EXP`, and `CP`, but strong negatively correlated with `TSD` and `TD`. The variables on the left are associated with sites at lower elevations (1500 m - 3000 m) and the variables on the right are associated with sites that are found in higher elevations (3000 m - 3950 m). The short arrow for shrub cover (`SC`) means that while the shrub cover might carry some ecological meaning, its variation is not well captured in the first two principal components.
+
+\(ii\) By looking at the ordination plot in Figure 3, we can tell that elevation (`ELE`) and canopy cover (`CP`) are strong positively correlated, which means that they have an influence or effect on the community composition of the birds in Yushan Mountain. This would suggest that the largest variation among the sites is driven by how canpoy cover varies across elevation gradient. As you move up the mountain, lower temperatures limit the growth of plants, resulting in a lower or reduced canopy cover. This can affect the amount of resources available for these birds and reduce the amount of places they can use for nesting or find refugia for thermal regulation. This results in species that are adapted to tall, dense tree covers being more abundant on lower elevations, while species adapted to high elevation sites will dominate those sites.
+
+\(iii\)
+
+-   Canopy cover (`CP`) and elevation (`ELE`) show a strong positive correlation. Their arrows are overlapping over each other facing the same direction. This shows us how an increase in elevation is associated with dense canopy.
+
+-   Slope (`SLP`) and exposure (`EXP`) lie close to `CP` and `ELE`, which may suggest that they co-vary positively with elevation. Higher elevations tend to be more exposed and steeper.
+
+-   Tree species diversity (`TSD`) and tree density (`TD`) are strongly negatively correlated to `ELE` and `CP` because they are pointing in the opposite direction these variables. They are also strongly negatively correlated to slope and exposure, which means that tree density and tree species diversity will decline with an increase in elevation due to temperature limits and high exposure.
